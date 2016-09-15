@@ -374,12 +374,9 @@ defmodule ExAdmin.Repo do
       %{join_through: first} ->
         related = res_model.__schema__(:association, field).related
         second = first.__schema__(:associations)
-                 |> Enum.reduce(nil, fn(assoc, acc) ->
-                   if first.__schema__(:association, assoc).related == related do
-                     acc = assoc
-                   end
+                 |> Enum.find(nil, fn(assoc) ->
+                   first.__schema__(:association, assoc).related == related
                  end)
-
         {:ok, {first, second}}
       _ ->
         {:error, :notfound}
